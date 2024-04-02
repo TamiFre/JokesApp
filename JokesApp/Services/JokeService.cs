@@ -72,7 +72,7 @@ namespace JokesApp.Services
 
 
 
-        public async Task<Categories> GetCategories()
+        public async Task<List<string>> GetCategories()
         {
             Categories c = null;
             HttpResponseMessage httpResponseMessage = await httpClient.GetAsync($"{URL}categories");
@@ -82,17 +82,30 @@ namespace JokesApp.Services
 
                 string jSon = await httpResponseMessage.Content.ReadAsStringAsync();
                 c = JsonSerializer.Deserialize<Categories>(jSon,options);
+                return c.CategoriesList.ToList();
 
             }
+            return null;
 
-            return c;
+            
         }
 
 
         public async Task<Joke> GetOneLiner()
         {
             Joke j = null;
-            HttpResponseMessage response = await httpClient.GetAsync($"{URL}joke/Any?safe-mode");
+            HttpResponseMessage response = await httpClient.GetAsync($"{URL}joke/Any?type=single");
+
+            if (response.IsSuccessStatusCode)
+            {
+                string jSon = await response.Content.ReadAsStringAsync();
+                j = JsonSerializer.Deserialize<OneLiner>(jSon, options);
+                return j;
+            }
+
+            return null;
+            
+
         }
 
 

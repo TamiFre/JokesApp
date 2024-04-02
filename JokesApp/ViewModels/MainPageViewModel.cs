@@ -2,6 +2,7 @@
 using JokesApp.Services;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,11 +16,18 @@ namespace JokesApp.ViewModels
         private Joke joke;
         private string setup;
         private string delivery;
+        
 
         public bool IsVisible { get => joke is TwoPartJoke; }
         public string SetUp { get => setup; set { setup = value; OnPropertyChanged(); } }
         public string Delivery { get => delivery; set { delivery = value; OnPropertyChanged(); } }  
         
+        public ObservableCollection< string> ListCat { get; set; }
+        
+
+
+
+        public ICommand GetcategoriesCommand { get; private set; }
 
         public ICommand GetJokeCommand { get; private set; }
 
@@ -29,6 +37,10 @@ namespace JokesApp.ViewModels
         {
             joke = null;
             this.service=service;
+
+            ListCat = new ObservableCollection<string>();
+
+            GetcategoriesCommand = new Command(async () => { ListCat.Clear(); var cat = await service.GetCategories(); foreach (var c in cat) ListCat.Add(c); });
             GetJokeCommand = new Command(async () =>
             {
                 joke = await service.GetRandomJoke();

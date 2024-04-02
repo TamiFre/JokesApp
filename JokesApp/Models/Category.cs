@@ -14,15 +14,10 @@ namespace JokesApp.Models
             public bool Error { get; set; }
             [JsonPropertyName ("categories")]
             public string[] CategoriesList { get; set; }
-            public Categoryalias[] CategoryAliases { get; set; }
-            public long Timestamp { get; set; }
+           
         }
 
-        public class Categoryalias
-        {
-            public string Alias { get; set; }
-            public string Resolved { get; set; }
-        }
+       
 
     
 }
